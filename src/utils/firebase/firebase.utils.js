@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import {
   getAuth,
   signInWithRedirect,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
 } from 'firebase/auth';
@@ -19,17 +20,18 @@ const firebaseConfig = {
   messagingSenderId: '630062953188',
   appId: '1:630062953188:web:ceb8e59afbc19b5517f2f1',
 };
-// creates an app instance/object based on the config by identifying the relevant Software Developer Kit pr SDK
+// creates an app instance/object based on the config by identifying the relevant Software Developer Kit  "SDK"
 const firebaseApp = initializeApp(firebaseConfig);
 
-// Google auth provider, which in turn will give you back this provider instance.
+// Google auth provider, gives  back this provider instance.
 
 // These providers are kind of just instructions for this instance of provider, but you can have multiple different providers authentication.
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-// custom parameters will take some kind of configuration object and with it we can tell different ways that we want this Google auth provider to behave.
-provider.setCustomParameters({
-  // prompt means is that every time somebody interacts with our provider, we want to always force them to select an account.
+// setCustomParameters will take some kind of configuration object and with it we can tell different ways that we want this Google auth provider to behave.
+googleProvider.setCustomParameters({
+  // prompt means is that every time somebody interacts with our provider, we want to always force them to select an account of that provider.
+  // This is why these providers are instantiated as classes, whereas these auth are singeltons
   prompt: 'select_account',
 });
 
@@ -42,14 +44,30 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 // even with several providers that all have their own authentication. The application in itself only ever needs one authentivation
 export const auth = getAuth();
 
+// important about signInWithGooglePopup and Redirect:
+// Notice how with the sign in with pop up and sign in with redirects.These are general and they take an off and they take a provider I'm calling mine " Sign in with Google pop up and sign in with Google Redirect".
+// The reason for this, as I mentioned earlier, is because there are different providers you can have.
+
+// // exporting/instatntiating sign in with redirect
+// export const signInWithGoogleRedirect = () =>
+//   signInWithRedirect(auth, googleProvider);
+
 // exporting out sign in with popup
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
 //this Singleton instance allows us now to tell Firebase when we want to get a document or we want to set a document or anything like that related to our database.
 export const database = getFirestore();
 
 // In order to use the database this "method" or async function receives data from the authentication service. like from the Google authProvider. And then stores that inside of FIRESTORE.
-export const createUserdocumentFromAuth = async (userAuth) => {
+export const createUserdocumentFromAuth = async (
+  userAuth,
+  additionalInformation = { displayName: 'email' }
+) => {
+  // supposedly a protective action. against what i do not know
+  if (!userAuth) return;
   // userDocRef checks if there is an existing document reference and takes in three arguments:
   // database:stores the database instance
   // collections: (in this case called) users.
@@ -88,6 +106,7 @@ export const createUserdocumentFromAuth = async (userAuth) => {
         displayName,
         email,
         createdAt,
+        ...additionalInformation,
       });
     } catch (error) {
       // logging custom error message as well as the error.message
@@ -97,4 +116,11 @@ export const createUserdocumentFromAuth = async (userAuth) => {
   // So we have now created a way to create users.
   //   using this system we now have authentication as well as storage of these users inside of our application.
   return userDocRef;
+};
+// requests  email & password asynchronously
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  // the function canselles if it does not receive email or password
+  if (!email || !password) return;
+  //supposedly a protective action. against what i do not know
+  return await createUserWithEmailAndPassword(auth, email, password);
 };
