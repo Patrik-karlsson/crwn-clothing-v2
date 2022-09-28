@@ -1,12 +1,11 @@
 import './form-input.styles.scss';
+
 const FormInput = ({ label, ...otherProps }) => {
   return (
-    <div className="group">
-      <input className="form-input" {...otherProps} />
-      {/* if label exists run label */}
+    <div className='group'>
+      <input className='form-input' {...otherProps} />
       {label && (
         <label
-          // dynamic className that shrinks input
           className={`${
             otherProps.value.length ? 'shrink' : ''
           } form-input-label`}
@@ -17,4 +16,5 @@ const FormInput = ({ label, ...otherProps }) => {
     </div>
   );
 };
+
 export default FormInput;

@@ -1,88 +1,95 @@
 import { useState } from 'react';
+
 import FormInput from '../form-input/form-input.component';
-import './sign-in-form.styles.scss';
 import Button from '../button/button.component';
+
 import {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
+  signInAuthUserWithEmailAndPassword,
 } from '../../utils/firebase/firebase.utils';
 
-// tracking inputs can be done with either several individual useState values or by grouping them into one object. all with empty strings.
+import './sign-in-form.styles.scss';
+
 const defaultFormFields = {
   email: '',
   password: '',
 };
 
 const SignInForm = () => {
-  // takes in defaultFormFields as a document  and setFormFields as data
   const [formFields, setFormFields] = useState(defaultFormFields);
-  //destructuring the values of formFields to be referensed later in the component
   const { email, password } = formFields;
-  console.log(formFields);
 
-  // resets Form gets initated after user has been created
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
-
-  //  whenever you make a call to some database, this is going to be asynchronous.
 
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopup();
     await createUserDocumentFromAuth(user);
   };
 
-  // initiated by submitEventHandler
-  // takes in event
   const handleSubmit = async (event) => {
-    // prevent any automatic behaviour of the form
     event.preventDefault();
 
     try {
+      const response = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log(response);
       resetFormFields();
-    } catch (error) {}
+    } catch (error) {
+      switch (error.code) {
+        case 'auth/wrong-password':
+          alert('incorrect password for email');
+          break;
+        case 'auth/user-not-found':
+          alert('no user associated with this email');
+          break;
+        default:
+          console.log(error);
+      }
+    }
   };
 
-  // takes in an input whenever the text of any of the inputs changes
-  // by structuring or ("tying ") (event) to "name" and "value"
-  // And inside input
   const handleChange = (event) => {
     const { name, value } = event.target;
 
     setFormFields({ ...formFields, [name]: value });
   };
+
   return (
-    <div className="sign-up-container">
+    <div className='sign-up-container'>
       <h2>Already have an account?</h2>
-      <span>Sign in with email and password</span>
-
+      <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
-        {/* to bring functionality to the form we need to track the actual input inside of these INPUTS into our form component. with useState */}
-
         <FormInput
-          label="Email"
-          type="email"
+          label='Email'
+          type='email'
           required
           onChange={handleChange}
-          name="email"
+          name='email'
           value={email}
         />
 
         <FormInput
-          label="Password"
-          type="password"
+          label='Password'
+          type='password'
           required
           onChange={handleChange}
-          name="password"
+          name='password'
           value={password}
         />
-
-        <Button type="submit">Sign In</Button>
-        <Button buttonType="google" onClick={signInWithGoogle}>
-          Google sign in
-        </Button>
+        <div className='buttons-container'>
+          <Button type='submit'>Sign In</Button>
+          <Button type='button' buttonType='google' onClick={signInWithGoogle}>
+            Google sign in
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
+
 export default SignInForm;

@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import FormInput from '../form_input/form-input.component';
-import './sign-up-form.styles.scss';
+
+import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
+
 import {
   createAuthUserWithEmailAndPassword,
-  createUserdocumentFromAuth,
+  createUserDocumentFromAuth,
 } from '../../utils/firebase/firebase.utils';
 
-// tracking inputs can be done with either several individual useState values or by grouping them into one object. all with empty strings.
+import './sign-up-form.styles.scss';
+
 const defaultFormFields = {
   displayName: '',
   email: '',
@@ -16,36 +18,30 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
-  // takes in defaultFormFields as a document  and setFormFields as data
   const [formFields, setFormFields] = useState(defaultFormFields);
-  //destructuring the values of formFields to be referensed later in the component
   const { displayName, email, password, confirmPassword } = formFields;
-  console.log(formFields);
 
-  // resets Form gets initated after user has been created
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
-  // initiated by submitEventHandler
-  // takes in event
+
   const handleSubmit = async (event) => {
-    // prevent any automatic behaviour of the form
     event.preventDefault();
-    // does password match with confirm password?
+
     if (password !== confirmPassword) {
       alert('passwords do not match');
       return;
     }
-    // create user document from the returns
+
     try {
       const { user } = await createAuthUserWithEmailAndPassword(
         email,
         password
       );
-      await createUserdocumentFromAuth(user, { displayName });
+
+      await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
-      // is the user authenticated?
       if (error.code === 'auth/email-already-in-use') {
         alert('Cannot create user, email already in use');
       } else {
@@ -54,65 +50,56 @@ const SignUpForm = () => {
     }
   };
 
-  // takes in an input whenever the text of any of the inputs changes
-  // by structuring or ("tying ") (event) to "name" and "value"
-  // And inside input
   const handleChange = (event) => {
     const { name, value } = event.target;
-    // all we need to do now is just say set form fields and what we're going to set it is an object because we're only going to be updating one input.
-    // So this will spread all of the fields and then we're just going to update the appropriate field by using these square brackets inside of our object notation.
 
     setFormFields({ ...formFields, [name]: value });
   };
-  return (
-    <div className="sign-up-container">
-      <h2>Don't hav an account?</h2>
-      <span>Sign up with email and password</span>
-      {/* form componenet gives special form features like input and label which guide and constrain users.  */}
-      {/* type ="" (designated attributes of a field like email, text or number)
-      required (has to be filled in by the user)*/}
-      {/* form also comes with a bound event handler called onSubmit which runs a callback. activated when the button with type="submit" is clicked*/}
-      <form onSubmit={handleSubmit}>
-        {/* to bring functionality to the form we need to track the actual input inside of these INPUTS into our form component. with useState */}
 
+  return (
+    <div className='sign-up-container'>
+      <h2>Don't have an account?</h2>
+      <span>Sign up with your email and password</span>
+      <form onSubmit={handleSubmit}>
         <FormInput
-          label="Display Name"
-          type="text"
+          label='Display Name'
+          type='text'
           required
           onChange={handleChange}
-          name="displayName"
+          name='displayName'
           value={displayName}
         />
 
         <FormInput
-          label="Email"
-          type="email"
+          label='Email'
+          type='email'
           required
           onChange={handleChange}
-          name="email"
+          name='email'
           value={email}
         />
 
         <FormInput
-          label="Password"
-          type="password"
+          label='Password'
+          type='password'
           required
           onChange={handleChange}
-          name="password"
+          name='password'
           value={password}
         />
 
         <FormInput
-          label="Confirm Password"
-          type="password"
+          label='Confirm Password'
+          type='password'
           required
           onChange={handleChange}
-          name="confirmPassword"
+          name='confirmPassword'
           value={confirmPassword}
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type='submit'>Sign Up</Button>
       </form>
     </div>
   );
 };
+
 export default SignUpForm;
