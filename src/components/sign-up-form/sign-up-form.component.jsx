@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import FormInput from '../form_input/form-input.component';
+import './sign-up-form.styles.scss';
+import Button from '../button/button.component';
 import {
   createAuthUserWithEmailAndPassword,
   createUserdocumentFromAuth,
@@ -63,7 +65,7 @@ const SignUpForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
   return (
-    <div className="Sign-up-container">
+    <div className="sign-up-container">
       <h2>Don't hav an account?</h2>
       <span>Sign up with email and password</span>
       {/* form componenet gives special form features like input and label which guide and constrain users.  */}
@@ -108,7 +110,7 @@ const SignUpForm = () => {
           name="confirmPassword"
           value={confirmPassword}
         />
-        <button type="submit">Sign Up</button>
+        <Button type="submit">Sign Up</Button>
       </form>
     </div>
   );
