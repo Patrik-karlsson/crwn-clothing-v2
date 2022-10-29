@@ -6,9 +6,18 @@
   h2 {
     margin: 10px 0;
   }
+<<<<<<< HEAD
 
   .buttons-container {
     display: flex;
     justify-content: space-between;
   }
 }
+=======
+}
+.buttons-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02

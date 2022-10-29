@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Outlet } from 'react-router-dom';
 
 import Directory from '../../components/directory/directory.component';
@@ -34,6 +35,16 @@ const Home = () => {
   return (
     <div>
       <Directory categories={categories} />
+=======
+import { Outlet } from "react-router-dom";
+
+import Directory from "../../components/directory/directory.component";
+
+const Home = () => {
+  return (
+    <div>
+      <Directory />
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
       <Outlet />
     </div>
   );

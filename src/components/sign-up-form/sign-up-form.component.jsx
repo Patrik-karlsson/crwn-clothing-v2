@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
+=======
+import { useState } from "react";
+
+import FormInput from "../form-input/form-input.component";
+import Button from "../button/button.component";
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
 
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
+<<<<<<< HEAD
 } from '../../utils/firebase/firebase.utils';
 
 import './sign-up-form.styles.scss';
@@ -15,6 +23,17 @@ const defaultFormFields = {
   email: '',
   password: '',
   confirmPassword: '',
+=======
+} from "../../utils/firebase/firebase.utils";
+
+import { SignUpContainer } from "./sign-up-form.styles";
+
+const defaultFormFields = {
+  displayName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
 };
 
 const SignUpForm = () => {
@@ -29,7 +48,11 @@ const SignUpForm = () => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
+<<<<<<< HEAD
       alert('passwords do not match');
+=======
+      alert("passwords do not match");
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
       return;
     }
 
@@ -42,10 +65,17 @@ const SignUpForm = () => {
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
+<<<<<<< HEAD
       if (error.code === 'auth/email-already-in-use') {
         alert('Cannot create user, email already in use');
       } else {
         console.log('user creation encountered an error', error);
+=======
+      if (error.code === "auth/email-already-in-use") {
+        alert("Cannot create user, email already in use");
+      } else {
+        console.log("user creation encountered an error", error);
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
       }
     }
   };
@@ -57,7 +87,11 @@ const SignUpForm = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="sign-up-container">
+=======
+    <SignUpContainer>
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
       <h2>Don't have an account?</h2>
       <span>Sign up with your email and password</span>
       <form onSubmit={handleSubmit}>
@@ -98,7 +132,11 @@ const SignUpForm = () => {
         />
         <Button type="submit">Sign Up</Button>
       </form>
+<<<<<<< HEAD
     </div>
+=======
+    </SignUpContainer>
+>>>>>>> 2a81cd144a5d969cfa4416aaab09063020329e02
   );
 };
 
